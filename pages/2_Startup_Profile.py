@@ -2,41 +2,13 @@ import streamlit as st
 import pandas as pd
 import re
 import plotly.express as px
+from utils import load_data
 
 st.set_page_config(layout="wide")
 
 # -------------------------------------------------
 # DATA LOADER
 # -------------------------------------------------
-
-@st.cache_data
-def load_data():
-    raw_df = pd.read_excel("data/startups.xlsx", header=None)
-
-    header_row = None
-    for i in range(len(raw_df)):
-        if "company" in raw_df.iloc[i].astype(str).str.lower().values:
-            header_row = i
-            break
-
-    if header_row is None:
-        st.error("❌ Header row not found")
-        st.stop()
-
-    df = pd.read_excel("data/startups.xlsx", header=header_row)
-
-    df.columns = (
-        df.columns.astype(str)
-        .str.strip()
-        .str.lower()
-        .str.replace(" ", "_")
-        .str.replace("-", "_")
-        .str.replace("(", "")
-        .str.replace(")", "")
-    )
-
-    return df
-
 
 df = load_data()
 
